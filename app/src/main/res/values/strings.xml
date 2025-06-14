@@ -6,5 +6,6 @@
 
     <string name="navigation_end">achieve destination</string>
     <string name="select_dest">pick destination first</string>
+    <string name="navigation_failed">导航失败，请重新开始导航</string>
 
 </resources>

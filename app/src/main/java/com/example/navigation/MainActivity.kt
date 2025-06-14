@@ -71,12 +71,13 @@ class MainActivity : ComponentActivity() {
             }
 
         })
+        initNavigationMap()
     }
 
     override fun onResume() {
         super.onResume()
         baiduView.onResume()
-        initNavigationMap()
+        locationClient.start()
     }
 
     private fun initNavigationMap(){
@@ -141,7 +142,6 @@ class MainActivity : ComponentActivity() {
         option.setIsNeedAddress(true)
         option.setOpenGps(true)
         locationClient.setLocOption(option)
-        locationClient.start()
     }
 
     inner class MyLocationListener : BDAbstractLocationListener() {
@@ -153,10 +153,10 @@ class MainActivity : ComponentActivity() {
                 return
             }
 
-            if (mapHasShowCurrentLocation){
+          /*  if (mapHasShowCurrentLocation){
                 Log.d(TAG,"map has updated")
                 return
-            }
+            }*/
 
             mapHasShowCurrentLocation = true
             val locData = MyLocationData.Builder()
@@ -214,6 +214,7 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         baiduView.onPause()
+        locationClient.stop()
     }
 
     private fun initNavigationEngine(){
@@ -264,7 +265,7 @@ class MainActivity : ComponentActivity() {
                     //执行算路失败的逻辑
                 }
             })
-    }
+        }
 
     private fun startRealNavigation(){
         val intent: Intent = Intent(
@@ -272,5 +273,9 @@ class MainActivity : ComponentActivity() {
             NavigationActivity::class.java
         )
         startActivity(intent)
+    }
+
+    private fun showHistoryPath(){
+        BikeNavigateHelper.getInstance().bikeNaviRouteInfo
     }
 }

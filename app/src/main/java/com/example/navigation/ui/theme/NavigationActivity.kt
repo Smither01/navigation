@@ -6,10 +6,15 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.baidu.mapapi.bikenavi.BikeNavigateHelper
+import com.baidu.mapapi.bikenavi.adapter.IBNaviStatusListener
 import com.baidu.mapapi.bikenavi.adapter.IBRouteGuidanceListener
+import com.baidu.mapapi.bikenavi.adapter.IBikeNaviLocationListener
+import com.baidu.mapapi.bikenavi.model.BikeNaviLocationResult
 import com.baidu.mapapi.bikenavi.model.BikeRouteDetailInfo
 import com.baidu.mapapi.bikenavi.model.IBRouteIconInfo
+import com.baidu.mapapi.map.MapView
 import com.baidu.mapapi.walknavi.model.RouteGuideKind
 import com.example.navigation.R
 
@@ -25,14 +30,20 @@ class NavigationActivity : ComponentActivity() {
         mNaviHelper = BikeNavigateHelper.getInstance()
 
         // 获取诱导页面地图展示View
-        val view: View = mNaviHelper.onCreate(this@NavigationActivity)
+        try {
+            val view: View = mNaviHelper.onCreate(this@NavigationActivity)
+            if (view == null) {
+                Toast.makeText(this@NavigationActivity, getString(R.string.navigation_failed), Toast.LENGTH_SHORT).show()
+                finish()
+                return
+            }
+            setContentView(view)
 
-        if (view == null) {
-            Log.d(TAG,"mNaviHelper create view is null, check map engine")
-            finish()
-            return
+        }catch (exception: Exception){
+            Log.d(TAG,"create mapview failed:"+exception.message)
         }
-        setContentView(view)
+
+
 
         // 开始导航
         mNaviHelper.startBikeNavi(this@NavigationActivity)
@@ -85,6 +96,23 @@ class NavigationActivity : ComponentActivity() {
             }
 
         })
+        mNaviHelper.setBikeNaviStatusListener(object : IBNaviStatusListener{
+            override fun onNaviExit() {
+                Log.d(TAG,"onNaviExit")
+            }
+
+        })
+
+        mNaviHelper.setNaviLocationListener(object :IBikeNaviLocationListener{
+            override fun onNaviLocationUpdate(p0: BikeNaviLocationResult?) {
+                if (p0 == null){
+                    return
+                }
+                Log.d(TAG,"当前位置: ${p0.gpsLatitude}, ${p0.gpsLongitude}")
+            }
+
+        })
+
     }
 
     override fun onResume() {
