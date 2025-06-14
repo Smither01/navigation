@@ -152,7 +152,7 @@ class NavigationActivity : ComponentActivity() {
             RouteResultActivity::class.java
         )
         intent.putExtra("destLocation",destLocation)
-        intent.putExtra("totleTime",(System.currentTimeMillis() - currentTime) / 1000)
+        intent.putExtra("totalTime",(System.currentTimeMillis() - currentTime) / 1000)
         startActivity(intent)
     }
 

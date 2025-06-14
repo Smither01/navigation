@@ -30,10 +30,10 @@ class RouteResultActivity : ComponentActivity() {
         baiduMap = baiduView.map
         setMapZoomLevel()
         mNaviHelper = BikeNavigateHelper.getInstance()
-        var totleTime = intent.getLongExtra("totleTime",0)
+        var totalTime = intent.getLongExtra("totalTime",0)
         var destLocation = intent.getParcelableExtra<LatLng>("destLocation") as LatLng
         var routeResult = initMapCenter(destLocation)
-        initRouteInfo(routeResult, totleTime)
+        initRouteInfo(routeResult, totalTime)
     }
 
     private fun initMapCenter(destLocation: LatLng): BikeRouteResult? {
@@ -53,12 +53,12 @@ class RouteResultActivity : ComponentActivity() {
     @SuppressLint("SetTextI18n")
     private fun initRouteInfo(
         routeResult: BikeRouteResult?,
-        totleTime: Long
+        totalTime: Long
     ) {
-        val totleDis = findViewById<TextView>(R.id.totle_length)
-        totleDis.text = routeResult!!.distance.toString() + "米"
-        val totleTimeText = findViewById<TextView>(R.id.totle_time)
-        totleTimeText.text = totleTime.toString() + "秒"
+        val totalDis = findViewById<TextView>(R.id.total_length)
+        totalDis.text = routeResult!!.distance.toString() + "米"
+        val totalTimeText = findViewById<TextView>(R.id.total_time)
+        totalTimeText.text = totalTime.toString() + "秒"
     }
 
     private fun setMapZoomLevel(){
