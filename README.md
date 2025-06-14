@@ -8,6 +8,12 @@
     该项目打包后最低运行在SDK24（Android 7.0）版本以及以上手机系统。
     该项目运行目标系统为SDK35（Android 15）版本以及以上手机系统
     该项目编译Gradle版本为8.10.2，IED版本为Android Studio Ladybug Feature Drop | 2024.2.2
+    该项目使用百度地图SDK，与本地APP调试签名SHA1:0F:93:07:98:15:C4:D7:2B:26:1D:C4:95:CC:24:A1:26:F5:4A:53:88进行绑定，本地Manifest中的
+    <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="ojyLTlnOQ4aJnelnwAetIFsrksW6cW0V" />为在百度开放平台申请的相关APP信息。
+            可能会存在下载代码到本地后，可以运行，但是无法使用的问题。
+            
 # ‌项目简介
     1、该项目基于百度地图SDK实现。
     2、该项目实现了启动APP后，自动开始定位，不会再次刷新实时地理位置，需要重新启动APP再次刷新（也可以通过修改MainActivity.mapHasShowCurrentLocation属性调整为实时动态更新）。
