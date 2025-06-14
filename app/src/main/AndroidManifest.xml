@@ -32,6 +32,7 @@
         <activity
             android:name=".ui.theme.NavigationActivity"
             android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
             android:exported="false" />
 
         <meta-data
