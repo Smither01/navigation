@@ -33,6 +33,7 @@ import com.baidu.mapapi.map.MyLocationData
 import com.baidu.mapapi.map.Overlay
 import com.baidu.mapapi.map.OverlayOptions
 import com.baidu.mapapi.model.LatLng
+import com.baidu.mapapi.utils.DistanceUtil
 import com.example.navigation.ui.theme.NavigationActivity
 
 
@@ -189,7 +190,7 @@ class MainActivity : ComponentActivity() {
                     val latitude = it.position.latitude
                     val longitude = it.position.longitude
                     onSelectPointInMap(LatLng(latitude, longitude))
-                    Log.d(TAG,"选中的兴趣点: ${it.name}")
+                    Log.d(TAG,"选中的兴趣点: ${it.name}" +"选中的位置: $latitude, $longitude")
                 }
             }
         })
@@ -272,10 +273,8 @@ class MainActivity : ComponentActivity() {
             this@MainActivity,
             NavigationActivity::class.java
         )
+        intent.putExtra("currentLocation", currentLocation)
+        intent.putExtra("destLocation",destLocation)
         startActivity(intent)
-    }
-
-    private fun showHistoryPath(){
-        BikeNavigateHelper.getInstance().bikeNaviRouteInfo
     }
 }

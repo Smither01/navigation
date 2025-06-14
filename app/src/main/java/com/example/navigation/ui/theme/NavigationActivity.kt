@@ -1,12 +1,19 @@
 package com.example.navigation.ui.theme
 
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ReportFragment.Companion.reportFragment
+import com.baidu.geofence.GeoFence
+import com.baidu.geofence.GeoFenceClient
+import com.baidu.geofence.GeoFenceListener
+import com.baidu.geofence.model.DPoint
 import com.baidu.mapapi.bikenavi.BikeNavigateHelper
 import com.baidu.mapapi.bikenavi.adapter.IBNaviStatusListener
 import com.baidu.mapapi.bikenavi.adapter.IBRouteGuidanceListener
@@ -15,17 +22,20 @@ import com.baidu.mapapi.bikenavi.model.BikeNaviLocationResult
 import com.baidu.mapapi.bikenavi.model.BikeRouteDetailInfo
 import com.baidu.mapapi.bikenavi.model.IBRouteIconInfo
 import com.baidu.mapapi.map.MapView
+import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.walknavi.model.RouteGuideKind
+import com.baidu.platform.comapi.wnplatform.model.datastruct.WLocData
 import com.example.navigation.R
 
 
 class NavigationActivity : ComponentActivity() {
-    private val TAG  = "MainActivity"
+    private val TAG  = "NavigationActivity"
     private lateinit var mNaviHelper: BikeNavigateHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigationctivity)
 
+        initGeoFence()
         //获取BikeNavigateHelper示例
         mNaviHelper = BikeNavigateHelper.getInstance()
 
@@ -46,7 +56,6 @@ class NavigationActivity : ComponentActivity() {
 
 
         // 开始导航
-        mNaviHelper.startBikeNavi(this@NavigationActivity)
         mNaviHelper.setRouteGuidanceListener( this, object: IBRouteGuidanceListener{
             override fun onRouteGuideIconInfoUpdate(p0: IBRouteIconInfo?) {
             }
@@ -112,6 +121,21 @@ class NavigationActivity : ComponentActivity() {
             }
 
         })
+        mNaviHelper.startBikeNavi(this@NavigationActivity)
+    }
+
+    private fun initGeoFence(){
+       /* var currentLocation = intent.getParcelableExtra<LatLng>("currentLocation") as LatLng
+        var destLocation = intent.getParcelableExtra<LatLng>("destLocation") as LatLng
+        val fenceClient = GeoFenceClient(this)
+        fenceClient.setActivateAction(GeoFenceClient.GEOFENCE_IN)
+        val centerPoint = DPoint(destLocation.latitude, destLocation.longitude)
+        fenceClient.addGeoFence(centerPoint, GeoFenceClient.BD09LL, 10F, "终点围栏")
+        fenceClient.setGeoFenceListener { p0, p1, p2 ->
+            if (p1 == GeoFenceResult.SUCCESS) {
+                Toast.makeText(this@NavigationActivity, "已到达终点区域", Toast.LENGTH_SHORT).show()
+            }
+        }*/
 
     }
 
