@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.theme.RouteResultActivity">
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/baidu_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"/>
+
+ <RelativeLayout
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:background="@color/white"
+     android:layout_margin="10dip"
+     android:paddingBottom="10dip"
+     android:paddingTop="10dip"
+     android:layout_gravity="bottom">
+     <TextView
+         android:id="@+id/totle_length_label"
+         android:layout_width="100dip"
+         android:gravity="center"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="50dip"
+         android:textSize="28dip"
+         android:text="@string/totle_dis"/>
+
+     <TextView
+         android:id="@+id/totle_length"
+         android:layout_width="100dip"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/totle_length_label"
+         android:layout_marginStart="50dip"
+         android:gravity="center"
+         android:textSize="20sp"
+         android:text="@string/totle_dis"/>
+
+     <TextView
+         android:id="@+id/totle_time_label"
+         android:layout_width="100dip"
+         android:layout_height="wrap_content"
+         android:layout_marginEnd="50dip"
+         android:textSize="28sp"
+         android:gravity="center"
+         android:layout_alignParentEnd="true"
+         android:text="@string/totle_time"/>
+
+     <TextView
+         android:id="@+id/totle_time"
+         android:layout_width="100dip"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         android:layout_marginEnd="50dip"
+         android:layout_below="@+id/totle_time_label"
+         android:textSize="20sp"
+         android:layout_alignParentEnd="true"
+         android:text="@string/totle_time"/>
+ </RelativeLayout>
+
+</FrameLayout>

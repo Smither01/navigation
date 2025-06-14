@@ -1,5 +1,6 @@
 package com.example.navigation.ui.theme
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,8 @@ import com.baidu.mapapi.bikenavi.model.BikeRouteDetailInfo
 import com.baidu.mapapi.bikenavi.model.IBRouteIconInfo
 import com.baidu.mapapi.map.MapView
 import com.baidu.mapapi.model.LatLng
+import com.baidu.mapapi.utils.CoordinateConverter
+import com.baidu.mapapi.utils.DistanceUtil
 import com.baidu.mapapi.walknavi.model.RouteGuideKind
 import com.baidu.platform.comapi.wnplatform.model.datastruct.WLocData
 import com.example.navigation.R
@@ -30,12 +33,13 @@ import com.example.navigation.R
 
 class NavigationActivity : ComponentActivity() {
     private val TAG  = "NavigationActivity"
+    private val currentTime = System.currentTimeMillis()
     private lateinit var mNaviHelper: BikeNavigateHelper
+    private lateinit var destLocation: LatLng
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigationctivity)
-
-        initGeoFence()
+        destLocation = intent.getParcelableExtra<LatLng>("destLocation") as LatLng
         //获取BikeNavigateHelper示例
         mNaviHelper = BikeNavigateHelper.getInstance()
 
@@ -117,26 +121,39 @@ class NavigationActivity : ComponentActivity() {
                 if (p0 == null){
                     return
                 }
-                Log.d(TAG,"当前位置: ${p0.gpsLatitude}, ${p0.gpsLongitude}")
+                var currentLocation = LatLng(p0.gpsLatitude, p0.gpsLongitude)
+                val distance = DistanceUtil.getDistance(destLocation, currentLocation)
+                Log.d(TAG,"当前位置: ${p0.gpsLatitude}, ${p0.gpsLongitude}" + "distance:$distance")
+                if (distance < 15){
+                    Toast.makeText(this@NavigationActivity, "本次导航结束", Toast.LENGTH_LONG).show()
+                    startRouteResultNavigation()
+                    val handler = Handler()
+                    handler.postDelayed({
+                        mNaviHelper.quit()
+                        finish()
+                    }, 1000)
+                }
+
             }
 
         })
-        mNaviHelper.startBikeNavi(this@NavigationActivity)
+        try {
+            mNaviHelper.startBikeNavi(this@NavigationActivity)
+        }catch (e : Exception){
+            Toast.makeText(this@NavigationActivity, "引擎错误，请重新规划导航", Toast.LENGTH_LONG).show()
+            Log.d(TAG,"error" + e.message)
+            finish()
+        }
     }
 
-    private fun initGeoFence(){
-       /* var currentLocation = intent.getParcelableExtra<LatLng>("currentLocation") as LatLng
-        var destLocation = intent.getParcelableExtra<LatLng>("destLocation") as LatLng
-        val fenceClient = GeoFenceClient(this)
-        fenceClient.setActivateAction(GeoFenceClient.GEOFENCE_IN)
-        val centerPoint = DPoint(destLocation.latitude, destLocation.longitude)
-        fenceClient.addGeoFence(centerPoint, GeoFenceClient.BD09LL, 10F, "终点围栏")
-        fenceClient.setGeoFenceListener { p0, p1, p2 ->
-            if (p1 == GeoFenceResult.SUCCESS) {
-                Toast.makeText(this@NavigationActivity, "已到达终点区域", Toast.LENGTH_SHORT).show()
-            }
-        }*/
-
+    private fun startRouteResultNavigation(){
+        val intent = Intent(
+            this@NavigationActivity,
+            RouteResultActivity::class.java
+        )
+        intent.putExtra("destLocation",destLocation)
+        intent.putExtra("totleTime",(System.currentTimeMillis() - currentTime) / 1000)
+        startActivity(intent)
     }
 
     override fun onResume() {

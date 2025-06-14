@@ -167,7 +167,7 @@ class MainActivity : ComponentActivity() {
             currentLocation = LatLng(location.latitude, location.longitude)
             baiduMap.setMyLocationData(locData)
             if (location.locType == BDLocation.TypeGpsLocation || location.locType == BDLocation.TypeNetWorkLocation) {
-                val center = com.baidu.mapapi.model.LatLng(location.latitude, location.longitude)
+                val center = LatLng(location.latitude, location.longitude)
                 val update = MapStatusUpdateFactory.newLatLng(center)
                 baiduMap.animateMapStatus(update)
             }
@@ -269,12 +269,17 @@ class MainActivity : ComponentActivity() {
         }
 
     private fun startRealNavigation(){
-        val intent: Intent = Intent(
+        val intent = Intent(
             this@MainActivity,
             NavigationActivity::class.java
         )
         intent.putExtra("currentLocation", currentLocation)
         intent.putExtra("destLocation",destLocation)
         startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        baiduView.onDestroy()
     }
 }
